@@ -48,8 +48,6 @@ jobs:
           LABELS: '["automerge"]'
       - id: automerge
         name: automerge
-        if: github.event.pull_request.labels | contains('automerge') && 
-            (github.event.pull_request.base.ref == 'staging' || github.event.pull_request.base.ref == 'develop')
         uses: "pascalgn/automerge-action@v0.16.4"
         continue-on-error: true
         env:
