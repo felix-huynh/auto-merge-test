@@ -41,17 +41,10 @@ jobs:
           LABELS: '["automerge"]'
       - id: automerge
         name: automerge
-        continue-on-error: true
-        uses: daneden/enable-automerge-action@v1
-        with:
-          # A personal access token that you have generated and saved in the
-          # repo or org’s encrypted secrets
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-          # The name of the PR author to enable automerge for
-          # Defaults to dependabot[bot]
-          allowed-author: "dependabot[bot]"
-
-          # Allowed values: MERGE | SQUASH | REBASE
-          # Defaults to MERGE
-          merge-method: SQUASH
+        uses: "pascalgn/automerge-action@v0.16.4"
+        if: github.ref != 'refs/heads/main' # Skip if the branch is main
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: "automerge,!wip"
+          MERGE_METHOD: "squash"
+          MERGE_REMOVE_LABELS: "automerge"
