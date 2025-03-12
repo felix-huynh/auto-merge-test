@@ -46,12 +46,3 @@ jobs:
           FROM_BRANCH: "main"
           TO_BRANCH: "staging"
           LABELS: '["automerge"]'
-      - id: automerge
-        name: automerge
-        uses: "pascalgn/automerge-action@v0.16.4"
-        continue-on-error: true
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          MERGE_LABELS: "automerge,!wip"
-          MERGE_METHOD: "squash"
-          MERGE_REMOVE_LABELS: "automerge"
