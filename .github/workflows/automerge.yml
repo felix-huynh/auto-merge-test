@@ -1,49 +1,16 @@
-name: Automerge
+name: Auto-merge Dependabot
+on: pull_request
 
-on:
-  # Trigger automerge for all open pull requests.
-  push:
-
-  # Trigger automerge for all open pull requests on schedule.
-  schedule:
-    - cron: 0 * * * *
-
-  # Trigger automerge when a pull request is approved.
-  pull_request_review:
-    types:
-      - submitted
-
-  # Trigger automerge when pull requests are updated or labeled.
-  pull_request_target:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - edited
-      - labeled
-      - unlabeled
-      - ready_for_review
-
-  # Allow manual triggering of the workflow.
-  workflow_dispatch:
-    inputs:
-      pull-request:
-        description: Pull Request Number
-        required: false
-      review:
-        description: Review ID
-        required: false
+permissions:
+  pull-requests: write
+  contents: write
 
 jobs:
   automerge:
     runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'automerge')
     steps:
-      - uses: reitermarkus/automerge@v2
+      - uses: peter-evans/enable-pull-request-automerge@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          merge-method: rebase
-          do-not-merge-labels: never-merge
-          required-labels: automerge
-          pull-request: ${{ github.event.inputs.pull-request }}
-          review: ${{ github.event.inputs.review }}
-          dry-run: true
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
