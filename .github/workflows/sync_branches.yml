@@ -1,0 +1,57 @@
+name: Sync branches
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  # Needed to read branches
+  contents: read
+  # Needed to create PR's
+  pull-requests: write
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Syncing branches
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+            node-version: 'latest'
+      - name: Opening develop pull request
+        id: pull_develop
+        uses: jdtx0/branch-sync@v1.5.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_AUTO_MERGE_METHOD: "merge"
+          FROM_BRANCH: "main"
+          TO_BRANCH: "develop"
+          LABELS: '["automerge"]'
+      - name: Opening staging pull request
+        id: pull_staging
+        uses: jdtx0/branch-sync@v1.5.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_AUTO_MERGE_METHOD: "merge"
+          FROM_BRANCH: "main"
+          TO_BRANCH: "staging"
+          LABELS: '["automerge"]'
+      - id: automerge
+        name: automerge
+        continue-on-error: true
+        uses: daneden/enable-automerge-action@v1
+        with:
+          # A personal access token that you have generated and saved in the
+          # repo or org’s encrypted secrets
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # The name of the PR author to enable automerge for
+          # Defaults to dependabot[bot]
+          allowed-author: "dependabot[bot]"
+
+          # Allowed values: MERGE | SQUASH | REBASE
+          # Defaults to MERGE
+          merge-method: SQUASH
