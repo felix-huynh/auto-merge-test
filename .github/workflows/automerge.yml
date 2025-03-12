@@ -1,0 +1,49 @@
+name: Automerge
+
+on:
+  # Trigger automerge for all open pull requests.
+  push:
+
+  # Trigger automerge for all open pull requests on schedule.
+  schedule:
+    - cron: 0 * * * *
+
+  # Trigger automerge when a pull request is approved.
+  pull_request_review:
+    types:
+      - submitted
+
+  # Trigger automerge when pull requests are updated or labeled.
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+      - labeled
+      - unlabeled
+      - ready_for_review
+
+  # Allow manual triggering of the workflow.
+  workflow_dispatch:
+    inputs:
+      pull-request:
+        description: Pull Request Number
+        required: false
+      review:
+        description: Review ID
+        required: false
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: reitermarkus/automerge@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          merge-method: rebase
+          do-not-merge-labels: never-merge
+          required-labels: automerge
+          pull-request: ${{ github.event.inputs.pull-request }}
+          review: ${{ github.event.inputs.review }}
+          dry-run: true
