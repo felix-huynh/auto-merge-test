@@ -1,25 +1,19 @@
 name: Automerge
 
 on:
-  # Try enabling auto-merge for all open pull requests.
-  # (Only recommended for testing.)
+  # Trigger automerge for all open pull requests.
   push:
 
-  # Try enabling auto-merge for all open pull requests.
+  # Trigger automerge for all open pull requests on schedule.
   schedule:
     - cron: 0 * * * *
 
-  # Try enabling auto-merge when a pull request is approved. Note that this
-  # event skips the check for the pull request author association and instead
-  # checks the review author association.
+  # Trigger automerge when a pull request is approved.
   pull_request_review:
     types:
       - submitted
 
-  # Try enabling auto-merge for a pull request when a draft is marked as
-  # “ready for review”, when a required label is applied or when a
-  # “do not merge” label is removed, or when a pull request is updated in
-  # any way (opened, synchronized, reopened, edited).
+  # Trigger automerge when pull requests are updated or labeled.
   pull_request_target:
     types:
       - opened
@@ -30,8 +24,7 @@ on:
       - unlabeled
       - ready_for_review
 
-  # Try enabling auto-merge for the specified pull request,
-  # review or all open pull requests if none is specified.
+  # Allow manual triggering of the workflow.
   workflow_dispatch:
     inputs:
       pull-request:
@@ -45,10 +38,9 @@ jobs:
   automerge:
     runs-on: ubuntu-latest
     steps:
-      - uses: reitermarkus/automerge@v2      
-        if: ${{ github.event.pull_request.base.ref == 'staging' || github.event.pull_request.base.ref == 'develop' }}
+      - uses: reitermarkus/automerge@v2
         with:
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           merge-method: rebase
           do-not-merge-labels: never-merge
           required-labels: automerge
