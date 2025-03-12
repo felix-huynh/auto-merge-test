@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - staging
+      - develop
 
 permissions:
   # Needed to read branches
@@ -14,6 +18,7 @@ jobs:
   sync-branches:
     runs-on: ubuntu-latest
     name: Syncing branches
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,6 +29,7 @@ jobs:
       - name: Opening develop pull request
         id: pull_develop
         uses: jdtx0/branch-sync@v1.5.1
+        if: github.event.ref != 'refs/heads/develop'
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_AUTO_MERGE_METHOD: "merge"
@@ -33,6 +39,7 @@ jobs:
       - name: Opening staging pull request
         id: pull_staging
         uses: jdtx0/branch-sync@v1.5.1
+        if: github.event.ref != 'refs/heads/staging'
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_AUTO_MERGE_METHOD: "merge"
@@ -41,6 +48,8 @@ jobs:
           LABELS: '["automerge"]'
       - id: automerge
         name: automerge
+        if: github.event.pull_request.labels | contains('automerge') && 
+            (github.event.pull_request.base.ref == 'staging' || github.event.pull_request.base.ref == 'develop')
         uses: "pascalgn/automerge-action@v0.16.4"
         continue-on-error: true
         env:
