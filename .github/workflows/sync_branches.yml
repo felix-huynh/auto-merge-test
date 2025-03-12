@@ -1,9 +1,9 @@
-name: Sync master to develop
+name: Sync master to staging
 
 on: 
   push: 
     branches:
-      - master 
+      - main 
 
 jobs: 
   branch-sync:
