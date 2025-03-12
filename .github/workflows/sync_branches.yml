@@ -19,10 +19,10 @@ jobs:
           git config --global user.name 'Felix'
           git config --global user.email 'felix.huynh@yieldguild.games'     
           
-      - name: Push changes to develop when master is updated
+      - name: Push changes to staging when main is updated
         if: github.ref == 'refs/heads/main'
         run: | 
           git fetch origin 
           git checkout staging 
-          git merge master -X theirs 
+          git merge main -X theirs 
           git push origin staging
