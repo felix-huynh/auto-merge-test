@@ -39,9 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: reitermarkus/automerge@v2
-        if: ${{ github.event.pull_request.base.ref == 'staging' || github.event.pull_request.base.ref == 'develop' }}
         with:
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           merge-method: rebase
           do-not-merge-labels: never-merge
           required-labels: automerge
