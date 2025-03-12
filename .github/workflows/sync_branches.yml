@@ -42,7 +42,7 @@ jobs:
       - id: automerge
         name: automerge
         uses: "pascalgn/automerge-action@v0.16.4"
-        if: github.ref != 'refs/heads/main' # Skip if the branch is main
+        continue-on-error: true
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           MERGE_LABELS: "automerge,!wip"
