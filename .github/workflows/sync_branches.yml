@@ -55,3 +55,9 @@ jobs:
           # Allowed values: MERGE | SQUASH | REBASE
           # Defaults to MERGE
           merge-method: SQUASH
+      - id: automergeV2
+        name: automerge
+        uses: "pascalgn/automerge-action@v0.16.4"
+        env:
+          GITHUB_TOKEN: "${{ secrets.AUTO_MERGE_GITHUB_TOKEN }}"
+          MERGE_LABELS: "automerge,!wip"
