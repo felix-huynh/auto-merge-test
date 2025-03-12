@@ -1,4 +1,4 @@
-name: Sync master to staging
+name: Sync main to staging and develop
 
 on: 
   push: 
@@ -16,8 +16,8 @@ jobs:
 
       - name: Set up git 
         run: | 
-          git config --global user.name 'Felix'
-          git config --global user.email 'felix.huynh@yieldguild.games'     
+          git config --global user.name 'Bot'
+          git config --global user.email 'bot@yieldguild.games'     
           
       - name: Push changes to staging when main is updated
         if: github.ref == 'refs/heads/main'
@@ -26,3 +26,11 @@ jobs:
           git checkout staging 
           git merge main -X theirs 
           git push origin staging
+
+      - name: Push Changes to develop when main is updated
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git fetch origin
+          git checkout develop
+          git merge main -X theirs
+          git push origin develop
