@@ -7,6 +7,8 @@ on:
       - develop
       - staging
   pull_request:
+    branches:
+      - develop
 
 jobs:
   test:
