@@ -1,0 +1,49 @@
+name: Cursor AI Reviews (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Pull Request number to review"
+        required: true
+        type: number
+      run_code_review:
+        description: "Run Code Review"
+        required: false
+        type: boolean
+        default: true
+      run_security_review:
+        description: "Run Security Review"
+        required: false
+        type: boolean
+        default: true
+      run_document_generator:
+        description: "Run Document Generator"
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  code-review:
+    name: Code Review
+    if: ${{ inputs.run_code_review }}
+    uses: ./.github/workflows/ai-reviews/code.yml
+    with:
+      pr_number: ${{ inputs.pr_number }}
+    secrets: inherit
+
+  security-review:
+    name: Security Review
+    if: ${{ inputs.run_security_review }}
+    uses: ./.github/workflows/ai-reviews/security.yml
+    with:
+      pr_number: ${{ inputs.pr_number }}
+    secrets: inherit
+
+  document-generator:
+    name: Document Generator
+    if: ${{ inputs.run_document_generator }}
+    uses: ./.github/workflows/ai-reviews/docs.yml
+    with:
+      pr_number: ${{ inputs.pr_number }}
+    secrets: inherit
