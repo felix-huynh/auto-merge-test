@@ -1,4 +1,4 @@
-name: Cursor AI Reviews (Manual)
+name: Cursor AI Reviews (All Steps Manual)
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
   code-review:
     name: Code Review
     if: ${{ inputs.run_code_review }}
-    uses: ./.github/workflows/ai-reviews/code.yml
+    uses: ./.github/workflows/ai-review-code.yml
     with:
       pr_number: ${{ inputs.pr_number }}
     secrets: inherit
@@ -35,7 +35,7 @@ jobs:
   security-review:
     name: Security Review
     if: ${{ inputs.run_security_review }}
-    uses: ./.github/workflows/ai-reviews/security.yml
+    uses: ./.github/workflows/ai-review-security.yml
     with:
       pr_number: ${{ inputs.pr_number }}
     secrets: inherit
@@ -43,7 +43,7 @@ jobs:
   document-generator:
     name: Document Generator
     if: ${{ inputs.run_document_generator }}
-    uses: ./.github/workflows/ai-reviews/docs.yml
+    uses: ./.github/workflows/ai-review-docs.yml
     with:
       pr_number: ${{ inputs.pr_number }}
     secrets: inherit
